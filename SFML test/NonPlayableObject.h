@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Time.hpp>
 #include <iostream>
+#include "AssetManager.h"
 
 // Sets direction for object to move in, numbered for RNG purposes
 enum class Direction
@@ -15,25 +16,26 @@ enum class Direction
 class NonPlayableObject
 {
 private:
+    std::string textureName;
     sf::Texture texture;
     sf::Sprite sprite;
     float speed; // Speed of movement in pixels per second
     Direction direction = Direction::Up;
 
 public:
-    NonPlayableObject(const std::string& textureFile, float x, float y, float s)
-    {
-        speed = s;
-        if (!texture.loadFromFile(textureFile))
-        {
-            std::cout << "Woah this file | " << textureFile << " | didn't load!" << std::endl;
-            // Handle error if the texture couldn't be loaded
-        }
 
-        sprite.setTexture(texture);
-        std::cout << "Woah this file | " << textureFile << " | did load!" << std::endl;
+    NonPlayableObject(std::string texName, float x, float y, float s)
+    {
+        textureName = texName;
+        speed = s;
         sprite.setPosition(x, y);
     }
+
+    void SetTextureName(std::string texName);
+
+    void LoadTexture(AssetManager aM);
+
+    void SetAndLoadTexture(AssetManager aM, std::string texName);
 
     void Update(sf::Time deltaTime);
 

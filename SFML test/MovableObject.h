@@ -14,19 +14,14 @@ public:
     {
         if (!texture.loadFromFile(textureFile))
         {
+            texture.loadFromFile("Images/Fail.png");
             // Handle error if the texture couldn't be loaded
         }
         sprite.setTexture(texture);
         sprite.setPosition(x, y);
     }
 
-    void move(float offsetX, float offsetY)
-    {
-        sprite.move(offsetX, offsetY);
-    }
+    void Move(float offsetX, float offsetY);
 
-    void draw(sf::RenderWindow& window)
-    {
-        window.draw(sprite);
-    }
+    void Draw(sf::RenderWindow& window);
 };

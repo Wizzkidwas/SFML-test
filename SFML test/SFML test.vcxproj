@@ -145,11 +145,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MovableObject.cpp" />
     <ClCompile Include="NonPlayableObject.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AssetManager.h" />
     <ClInclude Include="MovableObject.h" />
     <ClInclude Include="NonPlayableObject.h" />
   </ItemGroup>

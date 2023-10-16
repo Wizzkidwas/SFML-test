@@ -1,6 +1,7 @@
 #include <sstream>
 #include "MovableObject.h"
 #include "NonPlayableObject.h"
+#include "AssetManager.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/System/Time.hpp>
@@ -14,9 +15,18 @@ enum class GameState
     Dialogue = 4
 };
 
+void PushToVector(std::vector<NonPlayableObject>& vec, AssetManager& aM, std::string texName, float x, float y, float s);
+
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(1280, 720), "Holy shit it works");
+
+    AssetManager assetManager;
+
+    // Load textures using the asset manager
+    assetManager.LoadTexture("Vettel", "Images/A W A K E N E D.png");
+    assetManager.LoadTexture("Nyck", "Images/Nyck T-Pose.jpg");
+    assetManager.LoadTexture("Rafisol", "Images/RafisolPreBattle.png");
 
     // Create music variable and load music
     sf::Music music;
@@ -43,8 +53,11 @@ int main()
 
     // Load and place non-playable objects into a vector
     std::vector<NonPlayableObject> nonPlayableObjects;
-    nonPlayableObjects.push_back(NonPlayableObject("Images/A W A K E N E D.png", 600, 500, 30.0f)); // Speed: 30 pixels per second
-    nonPlayableObjects.push_back(NonPlayableObject("Images/Nyck T-Pose.jpg", 200, 0, 50.0f));
+    PushToVector(nonPlayableObjects, assetManager, "Nyck", 200, 0, 50.0f);
+    PushToVector(nonPlayableObjects, assetManager, "Vettel", 600, 500, 30.0f);
+    PushToVector(nonPlayableObjects, assetManager, "Rafisol", 800, 0, 30.0f);
+
+
 
     window.setFramerateLimit(60); // SFML handles frame rate limits by itself
     GameState gameState = GameState::Startup;   // Soon to be used for funky menus
@@ -66,19 +79,19 @@ int main()
                 // Handle arrow key presses to move the sprite
                 if (event.key.code == sf::Keyboard::Left)
                 {
-                    character.move(-5.0f, 0.0f); // Move left
+                    character.Move(-5.0f, 0.0f); // Move left
                 }
                 if (event.key.code == sf::Keyboard::Right)
                 {
-                    character.move(5.0f, 0.0f); // Move right
+                    character.Move(5.0f, 0.0f); // Move right
                 }
                 if (event.key.code == sf::Keyboard::Up)
                 {
-                    character.move(0.0f, -5.0f); // Move up
+                    character.Move(0.0f, -5.0f); // Move up
                 }
                 if (event.key.code == sf::Keyboard::Down)
                 {
-                    character.move(0.0f, 5.0f); // Move down
+                    character.Move(0.0f, 5.0f); // Move down
                 }
 
                 // Plays sound effect when space is pressed
@@ -111,12 +124,13 @@ int main()
         for (auto& nPObject : nonPlayableObjects)
         {
             // Update the non-playable object's position
+            nPObject.LoadTexture(assetManager);
             nPObject.Update(deltaTime);
         }
 
         window.clear();
         // Draw all sprites in the collection
-        character.draw(window);
+        character.Draw(window);
         for (auto& nPObject : nonPlayableObjects)
         {
             nPObject.Draw(window);
@@ -126,4 +140,11 @@ int main()
     music.stop();
     sound.stop();
     return 0;
+}
+
+void PushToVector(std::vector<NonPlayableObject> &vec, AssetManager &aM, std::string texName, float x, float y, float s)
+{
+    NonPlayableObject nPO = NonPlayableObject(texName, x, y, s);
+    vec.push_back(nPO);
+    vec.back().LoadTexture(aM);
 }

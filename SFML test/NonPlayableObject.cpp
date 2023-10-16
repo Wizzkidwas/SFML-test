@@ -1,6 +1,23 @@
 #include "NonPlayableObject.h"
 #include <random>
 
+void NonPlayableObject::SetTextureName(std::string texName)
+{
+    textureName = texName;
+}
+
+void NonPlayableObject::LoadTexture(AssetManager aM)
+{
+    texture = aM.GetTexture(textureName);
+    sprite.setTexture(texture);
+}
+
+void NonPlayableObject::SetAndLoadTexture(AssetManager aM, std::string texName)
+{
+    SetTextureName(texName);
+    LoadTexture(aM);
+}
+
 void NonPlayableObject::Update(sf::Time deltaTime)
 {
     // Move the object based on its speed and time
