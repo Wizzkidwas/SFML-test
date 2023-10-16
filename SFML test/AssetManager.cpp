@@ -30,3 +30,87 @@ sf::Texture& AssetManager::GetTexture(const std::string& name)
         return failTexture;
     }
 }
+
+void AssetManager::LoadFont(const std::string& name, const std::string& filename)
+{
+    sf::Font font;
+    if (font.loadFromFile(filename))
+    {
+        fonts[name] = font;
+    }
+    else
+    {
+        // Handle font loading error.
+    }
+}
+
+sf::Font& AssetManager::GetFont(const std::string& name)
+{
+    if (fonts.find(name) != fonts.end())
+    {
+        return fonts[name];
+    }
+    else
+    {
+        // Handle font not found (e.g., return a default font or throw an exception).
+        // Here, we return a default font.
+        static sf::Font defaultFont;
+        return defaultFont;
+    }
+}
+
+void AssetManager::LoadSoundBuffer(const std::string& name, const std::string& filename)
+{
+    sf::SoundBuffer soundBuffer;
+    if (soundBuffer.loadFromFile(filename))
+    {
+        soundBuffers[name] = soundBuffer;
+    }
+    else
+    {
+        // Handle sound buffer loading error.
+    }
+}
+
+sf::SoundBuffer& AssetManager::GetSoundBuffer(const std::string& name)
+{
+    if (soundBuffers.find(name) != soundBuffers.end())
+    {
+        return soundBuffers[name];
+    }
+    else 
+    {
+        // Handle sound buffer not found (e.g., return a default sound buffer or throw an exception).
+        // Here, we return a default sound buffer.
+        static sf::SoundBuffer defaultSoundBuffer;
+        return defaultSoundBuffer;
+    }
+}
+
+void AssetManager::LoadMusic(const std::string& name, const std::string& filename)
+{
+    sf::Music musicFile;
+    if (musicFile.openFromFile(filename))
+    {
+        // This doesn't work for music as it is a deleted function. Odd.
+        // music[name] = musicFile;
+    }
+    else {
+        // Handle music loading error.
+    }
+}
+
+sf::Music& AssetManager::GetMusic(const std::string& name)
+{
+    if (music.find(name) != music.end())
+    {
+        return music[name];
+    }
+    else
+    {
+        // Handle music not found (e.g., return a default music or throw an exception).
+        // Here, we return a default music.
+        static sf::Music defaultMusic;
+        return defaultMusic;
+    }
+}

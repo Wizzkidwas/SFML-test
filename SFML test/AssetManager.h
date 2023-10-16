@@ -2,6 +2,8 @@
 #include <map>
 #include <sstream>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+#include <SFML/System.hpp>
 
 class AssetManager
 {
@@ -17,15 +19,15 @@ public:
     sf::Texture& GetTexture(const std::string& name);
 
     // Load and get methods for fonts
-    void loadFont(const std::string& name, const std::string& filename);
-    sf::Font& getFont(const std::string& name);
+    void LoadFont(const std::string& name, const std::string& filename);
+    sf::Font& GetFont(const std::string& name);
 
     // Load and get methods for sounds
-    void loadSoundBuffer(const std::string& name, const std::string& filename);
-    sf::SoundBuffer& getSoundBuffer(const std::string& name);
+    void LoadSoundBuffer(const std::string& name, const std::string& filename);
+    sf::SoundBuffer& GetSoundBuffer(const std::string& name);
 
     // Load and get methods for music
-    void loadMusic(const std::string& name, const std::string& filename);
-    sf::Music& getMusic(const std::string& name);
+    void LoadMusic(const std::string& name, const std::string& filename);
+    sf::Music& GetMusic(const std::string& name);
 };
 
