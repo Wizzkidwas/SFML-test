@@ -22,11 +22,13 @@ int main()
     sf::RenderWindow window(sf::VideoMode(1280, 720), "Holy shit it works");
 
     AssetManager assetManager;
-
     // Load textures using the asset manager
     assetManager.LoadTexture("Vettel", "Images/A W A K E N E D.png");
     assetManager.LoadTexture("Nyck", "Images/Nyck T-Pose.jpg");
     assetManager.LoadTexture("Rafisol", "Images/RafisolPreBattle.png");
+
+    // TODO: Shift music and sounds to asset manager
+    // TODO: Add text
 
     // Create music variable and load music
     sf::Music music;
