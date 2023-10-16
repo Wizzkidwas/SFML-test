@@ -1,17 +1,31 @@
+#include <sstream>
+#include "MovableObject.h"
+#include "NonPlayableObject.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include <SFML/System/Time.hpp>
+
+enum class GameState
+{
+    Startup = 0,
+    MainMenu = 1,
+    Gameplay = 2,
+    PauseMenu = 3,
+    Dialogue = 4
+};
 
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(1280, 720), "Holy shit it works");
 
-
+    // Create music variable and load music
     sf::Music music;
     if (!music.openFromFile("Audio/Music/BGM_ALL_DLCBGM_V40_heppoko2.WAV"))
     {
         return -1; // Error: Music failed to load
     }
     music.setLoop(true);
+    music.play();
 
     // Create a sound buffer and load a sound effect file
     sf::SoundBuffer buffer;
@@ -24,28 +38,17 @@ int main()
     sf::Sound sound;
     sound.setBuffer(buffer);
 
-    // Load the image
-    sf::Texture texture1, texture2;
-    if (!texture1.loadFromFile("Images/When you're the normal one.png") || !texture2.loadFromFile("Images/A W A K E N E D.png"))
-    {
-        // Handle the case where the image couldn't be loaded
-        return -1;
-    }
-    sf::Sprite sprite1(texture1);
-    sf::Sprite sprite2(texture2);
+    // Load the player character
+    MovableObject character("Images/When you're the normal one.png", 400, 300);
 
-    // Set the initial position of the sprite
-    sf::Vector2f sprite1Position(400, 300);
-    sprite1.setPosition(sprite1Position);
-    sprite2.setPosition(600, 500);
+    // Load and place non-playable objects into a vector
+    std::vector<NonPlayableObject> nonPlayableObjects;
+    nonPlayableObjects.push_back(NonPlayableObject("Images/A W A K E N E D.png", 600, 500, 30.0f)); // Speed: 30 pixels per second
+    nonPlayableObjects.push_back(NonPlayableObject("Images/Nyck T-Pose.jpg", 200, 0, 50.0f));
 
-    // Put sprites into a vector
-    std::vector<sf::Sprite> sprites;
-    sprites.push_back(sprite1);
-    sprites.push_back(sprite2);
-
-    music.play();
-
+    window.setFramerateLimit(60); // SFML handles frame rate limits by itself
+    GameState gameState = GameState::Startup;   // Soon to be used for funky menus
+    sf::Clock clock;
     while (window.isOpen())
     {
         sf::Event event;
@@ -63,19 +66,19 @@ int main()
                 // Handle arrow key presses to move the sprite
                 if (event.key.code == sf::Keyboard::Left)
                 {
-                    sprite1Position.x -= 5; // Move left
+                    character.move(-5.0f, 0.0f); // Move left
                 }
                 if (event.key.code == sf::Keyboard::Right)
                 {
-                    sprite1Position.x += 5; // Move right
+                    character.move(5.0f, 0.0f); // Move right
                 }
                 if (event.key.code == sf::Keyboard::Up)
                 {
-                    sprite1Position.y -= 5; // Move up
+                    character.move(0.0f, -5.0f); // Move up
                 }
                 if (event.key.code == sf::Keyboard::Down)
                 {
-                    sprite1Position.y += 5; // Move down
+                    character.move(0.0f, 5.0f); // Move down
                 }
 
                 // Plays sound effect when space is pressed
@@ -96,7 +99,6 @@ int main()
                         music.play();
                     }
                 }
-                sprites.front().setPosition(sprite1Position);
                 break;
 
             // we don't process other types of events
@@ -105,11 +107,19 @@ int main()
             }
         }
 
+        sf::Time deltaTime = clock.restart(); // Get time elapsed since the last frame
+        for (auto& nPObject : nonPlayableObjects)
+        {
+            // Update the non-playable object's position
+            nPObject.Update(deltaTime);
+        }
+
         window.clear();
         // Draw all sprites in the collection
-        for (const auto& sprite : sprites)
+        character.draw(window);
+        for (auto& nPObject : nonPlayableObjects)
         {
-            window.draw(sprite);
+            nPObject.Draw(window);
         }
         window.display();
     }
