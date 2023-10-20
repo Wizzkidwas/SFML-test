@@ -1,5 +1,13 @@
 #include "AssetManager.h"
 #include <iostream>
+
+void AssetManager::InitialiseTextures()
+{
+    LoadTexture("Vettel", "Images/A W A K E N E D.png");
+    LoadTexture("Nyck", "Images/Nyck T-Pose.jpg");
+    LoadTexture("Rafisol", "Images/RafisolPreBattle.png");
+}
+
 void AssetManager::LoadTexture(const std::string& name, const std::string& filename)
 {
     sf::Texture texture;
@@ -84,33 +92,5 @@ sf::SoundBuffer& AssetManager::GetSoundBuffer(const std::string& name)
         // Here, we return a default sound buffer.
         static sf::SoundBuffer defaultSoundBuffer;
         return defaultSoundBuffer;
-    }
-}
-
-void AssetManager::LoadMusic(const std::string& name, const std::string& filename)
-{
-    sf::Music musicFile;
-    if (musicFile.openFromFile(filename))
-    {
-        // This doesn't work for music as it is a deleted function. Odd.
-        // music[name] = musicFile;
-    }
-    else {
-        // Handle music loading error.
-    }
-}
-
-sf::Music& AssetManager::GetMusic(const std::string& name)
-{
-    if (music.find(name) != music.end())
-    {
-        return music[name];
-    }
-    else
-    {
-        // Handle music not found (e.g., return a default music or throw an exception).
-        // Here, we return a default music.
-        static sf::Music defaultMusic;
-        return defaultMusic;
     }
 }

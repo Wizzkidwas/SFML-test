@@ -13,6 +13,12 @@ enum class Direction
     Right = 3
 };
 
+enum class Type
+{
+    Movable = 0,
+    Immobile = 1
+};
+
 class NonPlayableObject
 {
 private:
@@ -21,6 +27,7 @@ private:
     sf::Sprite sprite;
     float speed; // Speed of movement in pixels per second
     Direction direction = Direction::Up;
+    Type type = Type::Movable;
 
 public:
 
@@ -29,6 +36,14 @@ public:
         textureName = texName;
         speed = s;
         sprite.setPosition(x, y);
+    }
+
+    NonPlayableObject(std::string texName, float x, float y, float s, Type t)
+    {
+        textureName = texName;
+        speed = s;
+        sprite.setPosition(x, y);
+        type = t;
     }
 
     void SetTextureName(std::string texName);
@@ -42,4 +57,6 @@ public:
     void Draw(sf::RenderWindow& window);
 
     void ChangeDirection();
+
+    void ChangeType();
 };

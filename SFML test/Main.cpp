@@ -16,16 +16,15 @@ enum class GameState
 };
 
 void PushToVector(std::vector<NonPlayableObject>& vec, AssetManager& aM, std::string texName, float x, float y, float s);
+void PushToVector(std::vector<NonPlayableObject>& vec, AssetManager& aM, std::string texName, float x, float y, float s, Type t);
 
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(1280, 720), "Holy shit it works");
 
     AssetManager assetManager;
-    // Load textures using the asset manager
-    assetManager.LoadTexture("Vettel", "Images/A W A K E N E D.png");
-    assetManager.LoadTexture("Nyck", "Images/Nyck T-Pose.jpg");
-    assetManager.LoadTexture("Rafisol", "Images/RafisolPreBattle.png");
+    // Load textures using the asset manager, all textures stored in this function
+    assetManager.InitialiseTextures();
 
     // TODO: Shift music and sounds to asset manager
     // TODO: Add text
@@ -57,9 +56,15 @@ int main()
     std::vector<NonPlayableObject> nonPlayableObjects;
     PushToVector(nonPlayableObjects, assetManager, "Nyck", 200, 0, 50.0f);
     PushToVector(nonPlayableObjects, assetManager, "Vettel", 600, 500, 30.0f);
-    PushToVector(nonPlayableObjects, assetManager, "Rafisol", 800, 0, 30.0f);
+    PushToVector(nonPlayableObjects, assetManager, "Rafisol", 800, 0, 30.0f, Type::Immobile);
 
-
+    // Loads textures after being placed into vector which prevents texture pointers from breaking
+    // NOTE: Will need to run this again when adding a new item to this vector as memory locations will change
+    
+    for (auto& nPObject : nonPlayableObjects)
+    {
+        nPObject.LoadTexture(assetManager);
+    }
 
     window.setFramerateLimit(60); // SFML handles frame rate limits by itself
     GameState gameState = GameState::Startup;   // Soon to be used for funky menus
@@ -126,7 +131,7 @@ int main()
         for (auto& nPObject : nonPlayableObjects)
         {
             // Update the non-playable object's position
-            nPObject.LoadTexture(assetManager);
+            // nPObject.LoadTexture(assetManager);
             nPObject.Update(deltaTime);
         }
 
@@ -147,6 +152,13 @@ int main()
 void PushToVector(std::vector<NonPlayableObject> &vec, AssetManager &aM, std::string texName, float x, float y, float s)
 {
     NonPlayableObject nPO = NonPlayableObject(texName, x, y, s);
+    vec.push_back(nPO);
+    vec.back().LoadTexture(aM);
+}
+
+void PushToVector(std::vector<NonPlayableObject>& vec, AssetManager& aM, std::string texName, float x, float y, float s, Type t)
+{
+    NonPlayableObject nPO = NonPlayableObject(texName, x, y, s, t);
     vec.push_back(nPO);
     vec.back().LoadTexture(aM);
 }
