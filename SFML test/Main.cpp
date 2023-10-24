@@ -2,6 +2,7 @@
 #include "MovableObject.h"
 #include "NonPlayableObject.h"
 #include "AssetManager.h"
+#include "TextDisplay.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/System/Time.hpp>
@@ -15,8 +16,9 @@ enum class GameState
     Dialogue = 4
 };
 
-void PushToVector(std::vector<NonPlayableObject>& vec, AssetManager& aM, std::string texName, float x, float y, float s);
-void PushToVector(std::vector<NonPlayableObject>& vec, AssetManager& aM, std::string texName, float x, float y, float s, Type t);
+void PushTextureToVector(std::vector<NonPlayableObject>& vec, AssetManager& aM, std::string texName, float x, float y, float s);
+void PushTextureToVector(std::vector<NonPlayableObject>& vec, AssetManager& aM, std::string texName, float x, float y, float s, Type t);
+void PushTextToVector(std::vector<TextDisplay>& vec, AssetManager& aM, string name, string text, unsigned int characterSize, sf::Color colour, float x, float y);
 
 int main()
 {
@@ -25,8 +27,7 @@ int main()
     AssetManager assetManager;
     // Load textures using the asset manager, all textures stored in this function
     assetManager.InitialiseTextures();
-
-    // TODO: Shift music and sounds to asset manager
+    assetManager.InitialiseText();
     // TODO: Add text
 
     // Create music variable and load music
@@ -49,18 +50,23 @@ int main()
     sf::Sound sound;
     sound.setBuffer(buffer);
 
+    // Load Text and place into vectors (will make a new debug text vector)
+    std::vector<TextDisplay> textObjects;
+    PushTextToVector(textObjects, assetManager, "defaultFont", "Hello, World!", 24, sf::Color::White, 50.0f, 50.0f);
+    PushTextToVector(textObjects, assetManager, "defaultFont", "SFML Text Display", 36, sf::Color::Red, 100.0f, 200.0f);
+    PushTextToVector(textObjects, assetManager, "meme", "BOTTOM TEXT", 36, sf::Color::Blue, window.getSize().x / 2, 650.0f);
+    
     // Load the player character
     MovableObject character("Images/When you're the normal one.png", 400, 300);
 
     // Load and place non-playable objects into a vector
     std::vector<NonPlayableObject> nonPlayableObjects;
-    PushToVector(nonPlayableObjects, assetManager, "Nyck", 200, 0, 50.0f);
-    PushToVector(nonPlayableObjects, assetManager, "Vettel", 600, 500, 30.0f);
-    PushToVector(nonPlayableObjects, assetManager, "Rafisol", 800, 0, 30.0f, Type::Immobile);
+    PushTextureToVector(nonPlayableObjects, assetManager, "Nyck", 200, 0, 50.0f);
+    PushTextureToVector(nonPlayableObjects, assetManager, "Vettel", 600, 500, 30.0f);
+    PushTextureToVector(nonPlayableObjects, assetManager, "Rafisol", 800, 0, 30.0f, Type::Immobile);
 
     // Loads textures after being placed into vector which prevents texture pointers from breaking
     // NOTE: Will need to run this again when adding a new item to this vector as memory locations will change
-    
     for (auto& nPObject : nonPlayableObjects)
     {
         nPObject.LoadTexture(assetManager);
@@ -142,6 +148,10 @@ int main()
         {
             nPObject.Draw(window);
         }
+        for (auto& texts : textObjects)
+        {
+            texts.Draw(window);
+        }
         window.display();
     }
     music.stop();
@@ -149,16 +159,23 @@ int main()
     return 0;
 }
 
-void PushToVector(std::vector<NonPlayableObject> &vec, AssetManager &aM, std::string texName, float x, float y, float s)
+void PushTextureToVector(std::vector<NonPlayableObject> &vec, AssetManager &aM, std::string texName, float x, float y, float s)
 {
     NonPlayableObject nPO = NonPlayableObject(texName, x, y, s);
     vec.push_back(nPO);
     vec.back().LoadTexture(aM);
 }
 
-void PushToVector(std::vector<NonPlayableObject>& vec, AssetManager& aM, std::string texName, float x, float y, float s, Type t)
+void PushTextureToVector(std::vector<NonPlayableObject>& vec, AssetManager& aM, std::string texName, float x, float y, float s, Type t)
 {
     NonPlayableObject nPO = NonPlayableObject(texName, x, y, s, t);
     vec.push_back(nPO);
+    // Load texture after being placed in vector
     vec.back().LoadTexture(aM);
+}
+
+void PushTextToVector(std::vector<TextDisplay>& vec, AssetManager& aM, string name, string text, unsigned int characterSize, sf::Color colour, float x, float y)
+{
+    TextDisplay tD(aM, name, text, characterSize, colour, x, y);
+    vec.push_back(tD);   
 }

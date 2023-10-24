@@ -13,8 +13,10 @@ private:
     std::map<std::string, sf::SoundBuffer> soundBuffers;
     
 public:
+    // Initialise assets
     void InitialiseTextures();
-    
+    void InitialiseText();
+
     // Load and get methods for textures
     void LoadTexture(const std::string& name, const std::string& filename);
     sf::Texture& GetTexture(const std::string& name);

@@ -8,6 +8,13 @@ void AssetManager::InitialiseTextures()
     LoadTexture("Rafisol", "Images/RafisolPreBattle.png");
 }
 
+void AssetManager::InitialiseText()
+{
+    LoadFont("defaultFont", "Fonts/Mikado Medium.otf");
+    LoadFont("meme", "Fonts/impact.ttf");
+}
+
+
 void AssetManager::LoadTexture(const std::string& name, const std::string& filename)
 {
     sf::Texture texture;
