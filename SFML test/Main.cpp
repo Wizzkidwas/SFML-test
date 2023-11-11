@@ -125,6 +125,11 @@ int main()
                         music.play();
                     }
                 }
+
+                if (event.key.code == sf::Keyboard::Tab)
+                {
+                    textObjects.front().ToggleText();
+                }
                 break;
 
             // we don't process other types of events

@@ -10,7 +10,15 @@ void TextDisplay::SetPosition(float x, float y)
     text.setPosition(x, y);
 }
 
+void TextDisplay::ToggleText()
+{
+    showText = !showText;
+}
+
 void TextDisplay::Draw(sf::RenderWindow& window)
 {
-    window.draw(text);
+    if (showText)
+    {
+        window.draw(text);
+    }
 }
