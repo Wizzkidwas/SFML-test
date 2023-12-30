@@ -146,6 +146,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AssetManager.cpp" />
+    <ClCompile Include="BackgroundObject.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MovableObject.cpp" />
     <ClCompile Include="NonPlayableObject.cpp" />
@@ -153,6 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetManager.h" />
+    <ClInclude Include="BackgroundObject.h" />
     <ClInclude Include="MovableObject.h" />
     <ClInclude Include="NonPlayableObject.h" />
     <ClInclude Include="TextDisplay.h" />

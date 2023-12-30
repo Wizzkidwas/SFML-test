@@ -1,5 +1,6 @@
 #include <sstream>
 #include "MovableObject.h"
+#include "BackgroundObject.h"
 #include "NonPlayableObject.h"
 #include "AssetManager.h"
 #include "TextDisplay.h"
@@ -16,20 +17,29 @@ enum class GameState
     Dialogue = 4
 };
 
+enum class GameplayState
+{
+    Standard = 0,
+    Placement = 1,
+    Matching = 2,
+    Loss = 3
+};
+
 void PushTextureToVector(std::vector<NonPlayableObject>& vec, AssetManager& aM, std::string texName, float x, float y, float s);
 void PushTextureToVector(std::vector<NonPlayableObject>& vec, AssetManager& aM, std::string texName, float x, float y, float s, Type t);
+void PushTextureToVector(std::vector<BackgroundObject>& vec, AssetManager& aM, std::string texName, float x, float y);
 void PushTextToVector(std::vector<TextDisplay>& vec, AssetManager& aM, string name, string text, unsigned int characterSize, sf::Color colour, float x, float y);
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "Holy shit it works");
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "Wizz Puyo");
 
     AssetManager assetManager;
     // Load textures using the asset manager, all textures stored in this function
     assetManager.InitialiseTextures();
     assetManager.InitialiseText();
-    // TODO: Add text
 
+    // Music doesn't work in an asset manager due to deprecated features.
     // Create music variable and load music
     sf::Music music;
     if (!music.openFromFile("Audio/Music/BGM_ALL_DLCBGM_V40_heppoko2.WAV"))
@@ -39,6 +49,7 @@ int main()
     music.setLoop(true);
     music.play();
 
+    // TODO: Add sounds to asset manager
     // Create a sound buffer and load a sound effect file
     sf::SoundBuffer buffer;
     if (!buffer.loadFromFile("Audio/SFX/V_RSL_09.wav"))
@@ -57,20 +68,32 @@ int main()
     PushTextToVector(textObjects, assetManager, "meme", "BOTTOM TEXT", 36, sf::Color::Blue, window.getSize().x / 2, 650.0f);
     
     // Load the player character
-    MovableObject character("Images/When you're the normal one.png", 400, 300);
+    MovableObject character("Rafisol", 400, 300);
+    character.LoadTexture(assetManager);
+
+    // Load Background objects
+    std::vector<BackgroundObject> backgroundObjects;
+    PushTextureToVector(backgroundObjects, assetManager, "Background", 0, 0);
+
+    for (auto& bObject : backgroundObjects)
+    {
+        bObject.LoadTexture(assetManager);
+    }
 
     // Load and place non-playable objects into a vector
     std::vector<NonPlayableObject> nonPlayableObjects;
-    PushTextureToVector(nonPlayableObjects, assetManager, "Nyck", 200, 0, 50.0f);
-    PushTextureToVector(nonPlayableObjects, assetManager, "Vettel", 600, 500, 30.0f);
     PushTextureToVector(nonPlayableObjects, assetManager, "Rafisol", 800, 0, 30.0f, Type::Immobile);
-
+    
     // Loads textures after being placed into vector which prevents texture pointers from breaking
     // NOTE: Will need to run this again when adding a new item to this vector as memory locations will change
     for (auto& nPObject : nonPlayableObjects)
     {
         nPObject.LoadTexture(assetManager);
     }
+
+    // Game settings
+    int numberColours = 4; // Default value
+    int level = 1;
 
     window.setFramerateLimit(60); // SFML handles frame rate limits by itself
     GameState gameState = GameState::Startup;   // Soon to be used for funky menus
@@ -148,6 +171,11 @@ int main()
 
         window.clear();
         // Draw all sprites in the collection
+        // Make sure to render them in the right order, so background objects first
+        for (auto& bObject : backgroundObjects)
+        {
+            bObject.Draw(window);
+        }
         character.Draw(window);
         for (auto& nPObject : nonPlayableObjects)
         {
@@ -176,6 +204,13 @@ void PushTextureToVector(std::vector<NonPlayableObject>& vec, AssetManager& aM, 
     NonPlayableObject nPO = NonPlayableObject(texName, x, y, s, t);
     vec.push_back(nPO);
     // Load texture after being placed in vector
+    vec.back().LoadTexture(aM);
+}
+
+void PushTextureToVector(std::vector<BackgroundObject>& vec, AssetManager& aM, std::string texName, float x, float y)
+{
+    BackgroundObject bO = BackgroundObject(texName, x, y);
+    vec.push_back(bO);
     vec.back().LoadTexture(aM);
 }
 

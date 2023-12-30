@@ -3,6 +3,7 @@
 
 void AssetManager::InitialiseTextures()
 {
+    LoadTexture("Background", "Images/Backgrounds/Default/PlayerField.png");
     LoadTexture("Vettel", "Images/A W A K E N E D.png");
     LoadTexture("Nyck", "Images/Nyck T-Pose.jpg");
     LoadTexture("Rafisol", "Images/RafisolPreBattle.png");

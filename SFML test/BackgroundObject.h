@@ -1,18 +1,19 @@
 #pragma once
-#include <sstream>
 #include <SFML/Graphics.hpp>
+#include <SFML/System/Time.hpp>
+#include <iostream>
 #include "AssetManager.h"
-using std::string;
 
-class MovableObject
+class BackgroundObject
 {
 private:
     std::string textureName;
     sf::Texture texture;
     sf::Sprite sprite;
-
+    
 public:
-    MovableObject(std::string texName, float x, float y)
+
+    BackgroundObject(std::string texName, float x, float y)
     {
         textureName = texName;
         sprite.setPosition(x, y);
@@ -24,7 +25,6 @@ public:
 
     void SetAndLoadTexture(AssetManager aM, std::string texName);
 
-    void Move(float offsetX, float offsetY);
-
     void Draw(sf::RenderWindow& window);
 };
+
