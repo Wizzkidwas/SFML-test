@@ -15,6 +15,16 @@ void AssetManager::InitialiseText()
     LoadFont("meme", "Fonts/impact.ttf");
 }
 
+void AssetManager::InitialiseCustomPieces(std::string folder)
+{
+    std::string fileFolder = "Images/Skins/" + folder;
+    LoadTexture("Red", folder + "/red.png");
+    LoadTexture("Blue", folder + "/blue.png");
+    LoadTexture("Green", folder + "/green.png");
+    LoadTexture("Yellow", folder + "/yellow.png");
+    LoadTexture("Purple", folder + "/purple.png");
+}
+
 
 void AssetManager::LoadTexture(const std::string& name, const std::string& filename)
 {

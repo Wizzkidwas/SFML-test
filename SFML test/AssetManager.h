@@ -16,6 +16,7 @@ public:
     // Initialise assets
     void InitialiseTextures();
     void InitialiseText();
+    void InitialiseCustomPieces(std::string folder);
 
     // Load and get methods for textures
     void LoadTexture(const std::string& name, const std::string& filename);

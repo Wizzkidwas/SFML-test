@@ -4,6 +4,8 @@
 #include "NonPlayableObject.h"
 #include "AssetManager.h"
 #include "TextDisplay.h"
+#include "PieceGenerator.h"
+#include "Globals.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/System/Time.hpp>
@@ -34,10 +36,15 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(1280, 720), "Wizz Puyo");
 
+    Globals globals;
+
     AssetManager assetManager;
     // Load textures using the asset manager, all textures stored in this function
     assetManager.InitialiseTextures();
     assetManager.InitialiseText();
+
+    // TO-DO: Setting to choose folder for skins
+    assetManager.InitialiseCustomPieces("default");
 
     // Music doesn't work in an asset manager due to deprecated features.
     // Create music variable and load music
@@ -92,8 +99,9 @@ int main()
     }
 
     // Game settings
-    int numberColours = 4; // Default value
+    globals.numberOfColours = 4; // Default values
     int level = 1;
+
 
     window.setFramerateLimit(60); // SFML handles frame rate limits by itself
     GameState gameState = GameState::Startup;   // Soon to be used for funky menus
